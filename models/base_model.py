@@ -40,4 +40,3 @@ class Basemodel:
         new["updated_at"] = self.updated_at.isoformat()
         new["__class__"] = self.__class__.__name__
         return new 
-
