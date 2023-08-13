@@ -45,8 +45,4 @@ class Basemodel:
         new["created_at"] = self.created_at.isoformat()
         new["updated_at"] = self.updated_at.isoformat()
         new["__class__"] = self.__class__.__name__
-<<<<<<< HEAD
-        return new 
-=======
         return new
->>>>>>> c74a74869b8f6fb38ed78263d6719dc8ff806557
