@@ -4,7 +4,6 @@ from models.base_model import BaseModel
 
 
 class State(BaseModel):
-        """Create the state module"""
+    """Create the state module"""
 
-            name = ""
-
+    name = ""
