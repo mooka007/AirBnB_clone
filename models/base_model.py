@@ -6,7 +6,7 @@ from uuid import uuid4
 import models
 
 
-class Basemodel:
+class BaseModel:
     """ Class defines all attributes for other classes """
 
     def __init__(self, *args, **kwards):
