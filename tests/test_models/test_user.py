@@ -1,33 +1,55 @@
 #!/usr/bin/python3
-""" unit test for User """
+"""Test user"""
 import unittest
+from models.base_model import BaseModel
 from models.user import User
-from datetime import datetime
+import inspect
+from models import storage
+import pep8
 
 
-class UserTestCase(unittest.TestCase):
-    """ class for User test """
-
-    def test_user(self):
-        """existince"""
-        new = User()
-        self.assertTrue(hasattr(new, "id"))
-        self.assertTrue(hasattr(new, "created_at"))
-        self.assertTrue(hasattr(new, "updated_at"))
-        self.assertTrue(hasattr(new, "email"))
-        self.assertTrue(hasattr(new, "password"))
-        self.assertTrue(hasattr(new, "first_name"))
-        self.assertTrue(hasattr(new, "last_name"))
-
-        """type test"""
-        self.assertIsInstance(new.id, str)
-        self.assertIsInstance(new.created_at, datetime)
-        self.assertIsInstance(new.updated_at, datetime)
-        self.assertIsInstance(new.email, str)
-        self.assertIsInstance(new.password, str)
-        self.assertIsInstance(new.first_name, str)
-        self.assertIsInstance(new.last_name, str)
+class Test_pep8(unittest.TestCase):
+    """pep8 test cases class"""
+    def test_pep8_conformance(self):
+        """Test that we conform to PEP8."""
+        pep8style = pep8.StyleGuide(quiet=True)
+        result = pep8style.check_files(['models/user.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestDocs(unittest.TestCase):
+    """Base model document tests"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Testing class"""
+        cls.base_funcs = inspect.getmembers(User, inspect.isfunction)
+
+    def test_module_docstring(self):
+        """module docstring length"""
+        self.assertTrue(len(User.__doc__) >= 1)
+
+    def test_class_docstring(self):
+        """Class docstring length"""
+        self.assertTrue(len(User.__doc__) >= 1)
+
+
+class Test_user(unittest.TestCase):
+    """Tests the user module"""
+
+    def test_class(self):
+        """Test class"""
+        self.assertEqual(User.email, "")
+        self.assertEqual(User.password, "")
+        self.assertEqual(User.first_name, "")
+        self.assertEqual(User.last_name, "")
+        self.assertTrue(issubclass(User, BaseModel))
+
+    def test_instance(self):
+        our_user = User()
+        self.assertEqual(our_user.email, "")
+        self.assertEqual(our_user.password, "")
+        self.assertEqual(our_user.first_name, "")
+        self.assertEqual(our_user.last_name, "")
+        self.assertTrue(isinstance(our_user, BaseModel))

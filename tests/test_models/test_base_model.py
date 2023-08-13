@@ -1,118 +1,93 @@
 #!/usr/bin/python3
-""" unit test for bases """
-import json
+"""Test for BaseModel class"""
 import unittest
 from models.base_model import BaseModel
+import pep8
 from datetime import datetime
-import models
-from io import StringIO
-import sys
-from unittest.mock import patch
-captured_output = StringIO()
-sys.stdout = captured_output
+import inspect
+import json
 
 
-class BaseModelTestCase(unittest.TestCase):
-    """ class for base test """
-
-    def setUp(self):
-        """ class for base test """
-        self.filepath = models.storage._FileStorage__file_path
-        with open(self.filepath, 'w') as file:
-            file.truncate(0)
-        models.storage.all().clear()
-
-    def tearDown(self):
-        """ class for base test """
-        printed_output = captured_output.getvalue()
-        sys.stdout = sys.__stdout__
-
-    def test_basemodel_init(self):
-        """ class for base test """
-        new = BaseModel()
-
-        """ check if it have methods """
-        self.assertTrue(hasattr(new, "__init__"))
-        self.assertTrue(hasattr(new, "__str__"))
-        self.assertTrue(hasattr(new, "save"))
-        self.assertTrue(hasattr(new, "to_dict"))
-
-        """existince"""
-        self.assertTrue(hasattr(new, "id"))
-        self.assertTrue(hasattr(new, "created_at"))
-        self.assertTrue(hasattr(new, "updated_at"))
-
-        """type test"""
-        self.assertIsInstance(new.id, str)
-        self.assertIsInstance(new.created_at, datetime)
-        self.assertIsInstance(new.updated_at, datetime)
-
-        """ check if save in storage """
-        keyname = "BaseModel."+new.id
-        """ check if object exist by keyname """
-        self.assertIn(keyname, models.storage.all())
-        """ check if the object found in storage with corrrect id"""
-        self.assertTrue(models.storage.all()[keyname] is new)
-
-        """ Test update """
-        new.name = "My First Model"
-        new.my_number = 89
-        self.assertTrue(hasattr(new, "name"))
-        self.assertTrue(hasattr(new, "my_number"))
-        self.assertTrue(hasattr(models.storage.all()[keyname], "name"))
-        self.assertTrue(hasattr(models.storage.all()[keyname], "my_number"))
-
-        """check if save() update update_at time change"""
-        old_time = new.updated_at
-        new.save()
-        self.assertNotEqual(old_time, new.updated_at)
-        self.assertGreater(new.updated_at, old_time)
-
-        """ check if init it call: models.storage.save() """
-        with patch('models.storage.save') as mock_function:
-            obj = BaseModel()
-            obj.save()
-            mock_function.assert_called_once()
-
-        """check if it save in json file"""
-        keyname = "BaseModel."+new.id
-        with open(self.filepath, 'r') as file:
-            saved_data = json.load(file)
-        """ check if object exist by keyname """
-        self.assertIn(keyname, saved_data)
-        """ check if the value found in json is correct"""
-        self.assertEqual(saved_data[keyname], new.to_dict())
-
-    def test_basemodel_init2(self):
-        """ class for base test """
-
-        new = BaseModel()
-        new.name = "John"
-        new.my_number = 89
-        new2 = BaseModel(**new.to_dict())
-        self.assertEqual(new.id, new2.id)
-        self.assertEqual(new.name, "John")
-        self.assertEqual(new.my_number, 89)
-        self.assertEqual(new.to_dict(), new2.to_dict())
-
-    def test_basemodel_init3(self):
-        """ DOC DOC DOC """
-        new = BaseModel()
-        new2 = BaseModel(new.to_dict())
-        self.assertNotEqual(new, new2)
-        self.assertNotEqual(new.id, new2.id)
-        self.assertTrue(isinstance(new2.created_at, datetime))
-        self.assertTrue(isinstance(new2.updated_at, datetime))
-
-        new = BaseModel()
-
-        self.assertEqual(
-            str(new),  "[BaseModel] ({}) {}".format(new.id, new.__dict__))
-
-        old_time = new.updated_at
-        new.save()
-        self.assertGreater(new.updated_at, old_time)
+class Test_pep8(unittest.TestCase):
+    """pep8 test cases class"""
+    def test_pep8_conformance(self):
+        """Test that we conform to PEP8."""
+        pep8style = pep8.StyleGuide(quiet=True)
+        result = pep8style.check_files(['models/base_model.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
 
-if __name__ == '__main__':
+class TestDocs(unittest.TestCase):
+    """Base model document tests"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Testing class"""
+        cls.base_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
+
+    def test_module_docstring(self):
+        """module docstring length"""
+        self.assertTrue(len(BaseModel.__doc__) >= 1)
+
+    def test_class_docstring(self):
+        """Class docstring length"""
+        self.assertTrue(len(BaseModel.__doc__) >= 1)
+
+
+class TestBaseModel(unittest.TestCase):
+    """ Tests The base model functions """
+    def test_Attributes(self):
+        """Test all the attributes"""
+        bmodel_1 = BaseModel()
+        bmodel_2 = BaseModel()
+        # test if id is string
+        self.assertIsInstance(bmodel_1.id, str)
+        # test not equal id
+        self.assertNotEqual(bmodel_1.id, bmodel_2.id)
+        # test if created_at is datetime
+        self.assertIsInstance(bmodel_1.created_at, datetime)
+        # test if update_at is datetime
+        self.assertIsInstance(bmodel_1.updated_at, datetime)
+        # test if type is object
+        self.assertTrue(type(bmodel_1), object)
+        # test if it's a Basemodel instance
+        self.assertTrue(isinstance(bmodel_1, BaseModel))
+
+    def test_BaseModel_None(self):
+        # test setting None as attribute
+        bmodel_3 = BaseModel(None)
+        self.assertNotIn(None, bmodel_3.__dict__.values())
+
+    def test_save0(self):
+        """Test of the save method"""
+        bmodel_2 = BaseModel()
+        bmodel_2.save()
+        bmodel_2id = "BaseModel." + bmodel_2.id
+        with open("file.json", "r") as f:
+            self.assertIn(bmodel_2id, f.read())
+
+    def test_save1(self):
+        """Another Test of the save method"""
+        bmodel_4 = BaseModel()
+        bmodel_4.first_name = "Miguel"
+        bmodel_4.save()
+        self.assertNotEqual(bmodel_4.created_at, bmodel_4.updated_at)
+
+    def test_to_dict(self):
+        """Test of the to_dict function"""
+        bmodel_5 = BaseModel()
+        dictionary_5 = bmodel_5.to_dict()
+        # test the dict type
+        self.assertIsInstance(dictionary_5, dict)
+        # test for the dict instances
+        self.assertEqual(bmodel_5.to_dict()["id"], bmodel_5.id)
+        self.assertEqual(bmodel_5.to_dict()["__class__"], "BaseModel")
+        # test if the dictionary updates
+        bmodel_5.save()
+        dict_2 = bmodel_5.to_dict()
+        self.assertNotEqual(dictionary_5["updated_at"], dict_2["updated_at"])
+
+if __name__ == "__main__":
     unittest.main()
+

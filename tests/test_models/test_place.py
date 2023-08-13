@@ -1,47 +1,53 @@
 #!/usr/bin/python3
-""" unit test for Review """
+"""test the place method"""
 import unittest
+from models.base_model import BaseModel
 from models.place import Place
-from datetime import datetime
+import pep8
+import inspect
 
 
-class PlaceTestCase(unittest.TestCase):
-    """ class for place test """
-
-    def test_place(self):
-        """existince"""
-        new = Place()
-        self.assertTrue(hasattr(new, "id"))
-        self.assertTrue(hasattr(new, "created_at"))
-        self.assertTrue(hasattr(new, "updated_at"))
-        self.assertTrue(hasattr(new, "city_id"))
-        self.assertTrue(hasattr(new, "user_id"))
-        self.assertTrue(hasattr(new, "name"))
-        self.assertTrue(hasattr(new, "description"))
-        self.assertTrue(hasattr(new, "number_rooms"))
-        self.assertTrue(hasattr(new, "number_bathrooms"))
-        self.assertTrue(hasattr(new, "max_guest"))
-        self.assertTrue(hasattr(new, "price_by_night"))
-        self.assertTrue(hasattr(new, "latitude"))
-        self.assertTrue(hasattr(new, "longitude"))
-        self.assertTrue(hasattr(new, "amenity_ids"))
-
-        """type test"""
-        self.assertIsInstance(new.id, str)
-        self.assertIsInstance(new.created_at, datetime)
-        self.assertIsInstance(new.updated_at, datetime)
-        self.assertIsInstance(new.city_id, str)
-        self.assertIsInstance(new.user_id, str)
-        self.assertIsInstance(new.name, str)
-        self.assertIsInstance(new.description, str)
-        self.assertIsInstance(new.number_rooms, int)
-        self.assertIsInstance(new.number_bathrooms, int)
-        self.assertIsInstance(new.max_guest, int)
-        self.assertIsInstance(new.price_by_night, int)
-        self.assertIsInstance(new.latitude, float)
-        self.assertIsInstance(new.longitude, float)
-        self.assertIsInstance(new.amenity_ids, list)
+class Test_pep8(unittest.TestCase):
+    """pep8 test cases class"""
+    def test_pep8_conformance(self):
+        """Test that we conform to PEP8."""
+        pep8style = pep8.StyleGuide(quiet=True)
+        result = pep8style.check_files(['models/place.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestDocs(unittest.TestCase):
+    """Base model document tests"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Testing class"""
+        cls.place_funcs = inspect.getmembers(Place, inspect.isfunction)
+
+    def test_module_docstring(self):
+        """module docstring length"""
+        self.assertTrue(len(Place.__doc__) >= 1)
+
+    def test_class_docstring(self):
+        """Class docstring length"""
+        self.assertTrue(len(Place.__doc__) >= 1)
+
+
+class TestPlace(unittest.TestCase):
+    """Test the Place module"""
+
+    def test_class(self):
+        """Test class"""
+        self.assertEqual(Place.city_id, "")
+        self.assertEqual(Place.user_id, "")
+        self.assertEqual(Place.name, "")
+        self.assertEqual(Place.description, "")
+        self.assertEqual(Place.number_rooms, 0)
+        self.assertEqual(Place.number_bathrooms, 0)
+        self.assertEqual(Place.max_guest, 0)
+        self.assertEqual(Place.price_by_night, 0)
+        self.assertEqual(Place.latitude, 0.0)
+        self.assertEqual(Place.longitude, 0.0)
+        self.assertEqual(Place.amenity_ids, [])
+        self.assertTrue(issubclass(Place, BaseModel))

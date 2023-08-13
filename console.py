@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Console that contains the entry point of the comm interpreter"""
+"""Console"""
 
 import cmd
 import json
@@ -14,75 +14,100 @@ from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
-    """ Bla Bla """
-    promt = "(hbnb)"
+    """
+    bla bla bla bla
+    """
+    prompt = "(hbnb) "
     classes = ["BaseModel", "User", "State", "City",
-                "Amenity", "Place", "Review"]
+               "Amenity", "Place", "Review"]
     attributes = ["updated_at", "created_at", "id"]
     specs = ["\'", "\""]
 
     def do_EOF(self, line):
-        """ Exits """
+        """Exits on EOF"""
         print()
         return True
 
     def do_quit(self, line):
-        """Quit command to exit the program\n"""
+        """exits when typing quit"""
         return True
-    
+
     def emptyline(self):
-        """an empty line + ENTER shouldnt execute anything\n"""
+        """passing emptyline do nothing"""
         pass
+
     def do_create(self, line):
-        """ bla bla """
+        """
+        Creates a new instance of BaseModel
+        """
         if not line:
-            print("** Class name missing **")
+            print("** class name missing **")
         elif line not in self.classes:
-            print("** Class doesn't exist **")
+            print("** class doesn't exist **")
         else:
             new_item = eval(line)()
             print(new_item.id)
             new_item.save()
-    def do_clear(self, arg):
-        """ clear """
-        storage.all().clear()
-        self.do_all(arg)
-        print("** The data has been made clear **")
 
-    def do_show(self, arg):
-        """ Prints the string representation of an instance """
-        if self.valid(arg, True):
-            args = arg.split()
-            __key = args[0] + "." + args[1]
-            print(storage.all()[__key])
+    def do_show(self, line):
+        """ Prints the instance """
+        comm = line.split()
+        if not line:
+            print("** class name missing **")
+            return
+        elif comm[0] not in self.classes:
+            print("** class doesn't exist **")
+            return
+        elif len(comm) == 1:
+            print("** instance id missing **")
+            return
+        new_item = "{}.{}".format(comm[0], comm[1])
+        if new_item not in storage.all().keys():
+            print("** no instance found **")
+            return
+        else:
+            print("[{}] ({}) {}".format(comm[0],
+                                        comm[1], storage.all()[new_item]))
 
     def do_destroy(self, line):
-        # gra instead of in
-        """ method to delete an instance """
-        if self.valid(line, True):
-            args = line.split()
-            __key = args[0] + "." + args[1]
-            del storage.all()[__Key]
-            storage.save()
-
-    def do_all(self, arg):
-        """ prints all instance  """
-        args = arg.split()
-        _len = len(args)
-        my_list = []
-        if _len >= 1:
-            if args[0] not in HBNBCommand.all_class:
-                print("** class doesn't exist **")
-                return
-            for key, value in storage.all().items():
-                if args[0] in key:
-                    my_list.append(str(value))
+        """delete an instance"""
+        comm = line.split()
+        if not line:
+            print("** class name missing **")
+            return
+        elif comm[0] not in self.classes:
+            print("** class doesn't exist **")
+            return
+        elif len(comm) == 1:
+            print("** instance id missing **")
+            return
         else:
-            for key, value in storage.all().items():
-                my_list.append(str(value))
-        print(my_list)
+            new_item = "{}.{}".format(comm[0], comm[1])
+            if new_item not in storage.all():
+                print("** no instance found **")
+            else:
+                storage.all().pop(new_item)
+                storage.save()
+
+    def do_all(self, line):
+        """Prints all instance"""
+        list_object = []
+        new_item = storage.all()
+        if line and line not in self.classes:
+            print("** class doesn't exist **")
+            return
+        elif line in self.classes:
+            for key, value in new_item.items():
+                split_key = key.split(".")
+                new_key = "[" + split_key[0] + "] (" + split_key[1] + ")"
+                list_object.append(new_key + " " + str(value))
+        else:
+            for key, value in new_item.items():
+                list_object.append(str(key) + " " + str(value))
+        print(list_object)
+
     def do_update(self, line):
-        """ Updates an instance based on the class name and id  """
+        """Updates an instance"""
         comm = line.split()
         if not line:
             print("** class name missing **")
@@ -115,6 +140,5 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
                 return
 
-
 if __name__ == '__main__':
-        HBNBCommand().cmdloop()
+    HBNBCommand().cmdloop()
