@@ -92,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(comm) == 1:
             print("** instance id missing **")
             return
-        elif comm[0] + "." + comm[1] nott in storage.all().keys():
+        elif comm[0] + "." + comm[1] not in storage.all().keys():
             print("** no instance found **")
             return
         elif len(comm) == 2:
