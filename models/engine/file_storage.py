@@ -12,9 +12,11 @@ from models.state import State
 from models.user import User
 import json
 
+
 class FileStorage:
     """
-    Serializes instances into a JSON file and deserializes JSON files into instances
+    Serializes instances into a JSON file and
+    deserializes JSON files into instances
     """
     __file_path = "file.json"
     __objects = {}
@@ -39,7 +41,7 @@ class FileStorage:
 
     def reload(self):
         """
-        Deserializes the JSON file into objects, but only if the file exists; 
+        Deserializes the JSON file into objects, but only if the file exists;
         otherwise, it does nothing without raising an exception
         """
         classes = {'BaseModel': BaseModel, 'User': User, 'City': City,
@@ -51,8 +53,7 @@ class FileStorage:
                 for keys, values in objects.items():
                     temp = keys.split('.')
                     new = classes[temp[0]](**values)
-                    # new = Person(name="John", age=30) 
+                    # new = Person(name="John", age=30)
                     self.new(new)
         except FileNotFoundError:
             pass
-
