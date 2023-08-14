@@ -151,5 +151,5 @@ class Test_FileStorage(unittest.TestCase):
         self.assertIn(key_state, objs)
         self.assertIn(key_amenity, objs)
 
-if __name__ == '__main__':
-    unittest.main()
+        if __name__ == '__main__':
+            unittest.main()
