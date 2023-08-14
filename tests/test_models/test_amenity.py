@@ -36,7 +36,6 @@ class TestDocs(unittest.TestCase):
 
 class TestAmenity(unittest.TestCase):
     """Test the Amenity module"""
-    
     def test_class(self):
         """Test the amenity class"""
         self.assertEqual(Amenity.name, "")
