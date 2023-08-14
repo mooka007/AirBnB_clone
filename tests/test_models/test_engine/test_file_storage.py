@@ -136,13 +136,20 @@ class Test_FileStorage(unittest.TestCase):
         new_file.new(new_user)
         new_file.new(new_review)
         objs = new_file.all()
-        key = new_base.__class__.__name__ + "." + new_base.__dict__["id"]
-        key_2 = new_city.__class__.__name__ + "." + new_city.__dict__["id"]
-        key_user = new_user.__class__.__name__ + "." + new_user.__dict__["id"]
-        key_review = new_review.__class__.__name__ + "." + new_review.__dict__["id"]
-        key_place = new_place.__class__.__name__ + "." + new_place.__dict__["id"]
-        key_state = new_state.__class__.__name__ + "." + new_state.__dict__["id"]
-        key_amenity = new_amenity.__class__.__name__ + "." + new_amenity.__dict__["id"]
+        key = new_base.__class__.__name__ + "." \
+            + new_base.__dict__["id"]
+        key_2 = new_city.__class__.__name__ + "." \
+            + new_city.__dict__["id"]
+        key_user = new_user.__class__.__name__ + "." \
+            + new_user.__dict__["id"]
+        key_review = new_review.__class__.__name__ + "." \
+            + new_review.__dict__["id"]
+        key_place = new_place.__class__.__name__ + "." \
+            + new_place.__dict__["id"]
+        key_state = new_state.__class__.__name__ + "." \
+            + new_state.__dict__["id"]
+        key_amenity = new_amenity.__class__.__name__ + "." \
+            + new_amenity.__dict__["id"]
         self.assertIn(key, objs)
         self.assertIn(key_2, objs)
         self.assertIn(key_user, objs)
