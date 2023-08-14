@@ -9,7 +9,8 @@ import models
 
 
 class BaseModel:
-    """Class that defines all common attributes and methods for other classes"""
+    """Class that defines all common attributes""" \
+        """and methods for other classes"""
 
     def __init__(self, *args, **kwargs):
         """Initialization of the class"""
@@ -36,7 +37,8 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        """Returns a dictionary containing all the keys and values of the instance"""
+        """Returns a dictionary containing all the """\
+            """keys and values of the instance"""
         new_dict = self.__dict__.copy()
         new_dict["created_at"] = self.created_at.isoformat()
         new_dict["updated_at"] = self.updated_at.isoformat()
